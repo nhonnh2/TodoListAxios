@@ -1,8 +1,8 @@
 var getElById = function(id) {
     return document.getElementById(id);
 }
-var getElByClass = function(name) {
-    return document.getElementsByClassName(name);
+var getEl = function(selector) {
+    return document.querySelector(selector);
 }
 var taskService = new TaskService();
 var validator = new validator();
@@ -28,17 +28,17 @@ var addTask = function() {
     taskService
         .addTask(newTast)
         .then(function(res) {
-            isLoading = false;
-            checkLoading();
             alert("Add success !");
             getListTask();
             console.log(res);
         })
         .catch(function(err) {
-            isLoading = false;
-            checkLoading();
             alert(err)
         })
+        .finally(function() {
+            isLoading = false;
+            checkLoading();
+        });
 }
 
 var deleteTask = function(id) {
@@ -49,16 +49,19 @@ var deleteTask = function(id) {
         taskService
             .deleteTask(id)
             .then(function(res) {
-                isLoading = false;
-                checkLoading();
+
                 alert("this task is deleted");
                 getListTask();
             })
             .catch(function(err) {
+
+                alert(err)
+            })
+            .finally(function() {
                 isLoading = false;
                 checkLoading();
-                alert(err)
-            });
+            });;
+
     }
 }
 var changeStatus = function(id) {
@@ -79,15 +82,17 @@ var changeStatus = function(id) {
             return taskService.updateTask(task);
         })
         .then(function(res) {
-            isLoading = false;
-            checkLoading();
 
             getListTask();
-        }).catch(function(err) {
+        })
+        .catch(function(err) {
+
+            alert(err)
+        })
+        .finally(function() {
             isLoading = false;
             checkLoading();
-            alert(err)
-        });
+        });;
 }
 
 function renderTasks(tasks) {
@@ -124,11 +129,11 @@ function validate() {
 }
 
 function checkLoading() {
-    var cardBody = getElByClass("card__body")[0];
+    var cardBody = getEl(".card .card__body");
     if (isLoading === true) {
         cardBody.innerHTML += `<div class="loader"></div>`;
     } else {
-        getElByClass("loader")[0].remove();
+        getEl(".card__body .loader").remove();
     }
 }
 
